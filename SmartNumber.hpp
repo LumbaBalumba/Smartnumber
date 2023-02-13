@@ -15,17 +15,6 @@ namespace SmartNumber
     private:
         char state;
 
-        union value
-        {
-            int i_value;
-            long long ll_value;
-            double d_value;
-            std::string s_value;
-
-            ~value()
-            {};
-        };
-
         void *value_ptr;
 
         void
@@ -40,7 +29,7 @@ namespace SmartNumber
 
         explicit SmartNumber(double number);
 
-        explicit SmartNumber(std::string number);
+        explicit SmartNumber(const std::string &number);
 
         ~SmartNumber();
 

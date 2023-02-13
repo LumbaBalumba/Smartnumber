@@ -32,11 +32,24 @@ SmartNumber::SmartNumber::SmartNumber(double number)
     *(double *) value_ptr = number;
 }
 
-SmartNumber::SmartNumber::SmartNumber(std::string number)
+SmartNumber::SmartNumber::SmartNumber(const std::string &number)
 {
     state = 's';
     value_ptr = new std::string;
     *(std::string *) value_ptr = number;
+}
+
+SmartNumber::SmartNumber::~SmartNumber()
+{
+    if (state == 'i') {
+        delete (int *) value_ptr;
+    } else if (state == 'l') {
+        delete (long long *) value_ptr;
+    } else if (state == 'd') {
+        delete (double *) value_ptr;
+    } else if (state == 's') {
+        delete (std::string *) value_ptr;
+    }
 }
 
 
