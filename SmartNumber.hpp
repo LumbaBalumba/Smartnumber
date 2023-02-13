@@ -14,24 +14,33 @@ namespace SmartNumber
     {
     private:
         char state;
+
         union value
         {
             int i_value;
             long long ll_value;
             double d_value;
             std::string s_value;
+
+            ~value()
+            {};
         };
+
+        void *value_ptr;
+
+        void
+        normalize();
 
     public:
         SmartNumber();
 
-        SmartNumber(int number);
+        explicit SmartNumber(int number);
 
-        SmartNumber(long long number);
+        explicit SmartNumber(long long number);
 
-        SmartNumber(double number);
+        explicit SmartNumber(double number);
 
-        SmartNumber(std::string number);
+        explicit SmartNumber(std::string number);
 
         ~SmartNumber();
 
