@@ -36,7 +36,7 @@ SmartMath::SmartNumber::SmartNumber(const std::string &number) {
     value = evaluate(number);
 }
 
-std::string SmartMath::SmartNumber::type() {
+std::string SmartMath::SmartNumber::type() const {
     if (tag == INTEGER) {
         return "int";
     } else if (tag == LONG_LONG) {
@@ -99,7 +99,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
             }
         }
         case LONG_LONG: {
-            switch (tag) {
+            switch (other.tag) {
                 case LONG_LONG: {
                     long long a = std::get<long long>(value);
                     long long b = std::get<long long>(other.value);
@@ -128,7 +128,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
             }
         }
         case DOUBLE: {
-            switch (tag) {
+            switch (other.tag) {
                 case DOUBLE: {
                     double a = std::get<double>(value);
                     double b = std::get<double>(other.value);

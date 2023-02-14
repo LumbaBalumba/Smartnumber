@@ -48,7 +48,7 @@ namespace SmartMath {
 
         ~SmartNumber();
 
-        std::string type();
+        [[nodiscard]] std::string type() const;
 
         SmartNumber operator+(const SmartNumber &other) const;
 
@@ -92,6 +92,5 @@ namespace SmartMath {
     };
 
 }
-
 
 #endif //SMARTNUMBER_SMARTNUMBER_HPP
