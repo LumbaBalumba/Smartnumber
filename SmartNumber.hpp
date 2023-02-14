@@ -10,6 +10,12 @@
 #include <variant>
 
 namespace SmartMath {
+
+    class EvaluationError : public std::exception {
+    public:
+        const char * what() const noexcept override;
+    };
+
     double evaluate(const std::string &str);
 
     class SmartNumber {

@@ -6,8 +6,6 @@
 #include <set>
 #include <cmath>
 
-#include <iostream>
-
 typedef ssize_t index_t;
 
 SmartMath::SmartNumber::SmartNumber() {
@@ -137,5 +135,14 @@ double SmartMath::evaluate(const std::string &str) {
     if (str[str.size() - 1] == '|' && str[0] == '|') {
         return fabs(evaluate(slice(str, 1, (index_t) str.size() - 1)));
     }
-    return strtod(str.c_str(), nullptr);
+    char *eptr = nullptr;
+    double res = strtod(str.c_str(), &eptr);
+    if (*eptr || errno) {
+        throw (EvaluationError());
+    }
+    return res;
+}
+
+const char *SmartMath::EvaluationError::what() const noexcept {
+    return "Error while evaluating a string";
 }
