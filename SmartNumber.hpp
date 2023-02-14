@@ -6,14 +6,13 @@
 #define SMARTNUMBER_SMARTNUMBER_HPP
 
 #include <string>
-#include <climits>
 #include <variant>
 
 namespace SmartMath {
 
     class EvaluationError : public std::exception {
     public:
-        const char * what() const noexcept override;
+        [[nodiscard]] const char *what() const noexcept override;
     };
 
     double evaluate(const std::string &str);
@@ -28,17 +27,16 @@ namespace SmartMath {
 
         std::variant<int, long long, double> value;
 
-        void
-        normalize();
+        void normalize();
 
     public:
         SmartNumber();
 
-        explicit SmartNumber(int number);
+        SmartNumber(int number);
 
-        explicit SmartNumber(long long number);
+        SmartNumber(long long number);
 
-        explicit SmartNumber(double number);
+        SmartNumber(double number);
 
         explicit SmartNumber(const std::string &number);
 
@@ -46,17 +44,19 @@ namespace SmartMath {
 
         std::string type();
 
-        SmartNumber operator+(const SmartNumber &other);
+        SmartNumber operator+(const SmartNumber &other) const;
 
-        SmartNumber operator-(const SmartNumber &other);
+        SmartNumber operator-(const SmartNumber &other) const;
 
-        SmartNumber operator*(const SmartNumber &other);
+        SmartNumber operator*(const SmartNumber &other) const;
 
-        SmartNumber operator/(const SmartNumber &other);
+        SmartNumber operator/(const SmartNumber &other) const;
 
-        bool operator==(const SmartNumber &other);
+        bool operator==(const SmartNumber &other) const;
 
-        bool operator!=(const SmartNumber &other);
+        bool operator!=(const SmartNumber &other) const;
+
+        SmartNumber &operator=(const SmartNumber &other);
 
         SmartNumber &operator+=(const SmartNumber &other);
 

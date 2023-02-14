@@ -5,8 +5,12 @@
 #include "SmartNumber.hpp"
 #include <set>
 #include <cmath>
+#include <climits>
+#include <limits>
 
 typedef ssize_t index_t;
+
+static const double eps = 0.00001;
 
 SmartMath::SmartNumber::SmartNumber() {
     tag = INTEGER;
@@ -42,6 +46,59 @@ std::string SmartMath::SmartNumber::type() {
         return "double";
     }
     return "undefined";
+}
+
+bool SmartMath::SmartNumber::operator==(const SmartMath::SmartNumber &other) const {
+    if (tag != other.tag) {
+        return false;
+    }
+    if (tag == INTEGER || tag == LLONG) {
+        return value == other.value;
+    } else {
+        return fabs(std::get<double>(value) - std::get<double>(other.value)) < eps;
+    }
+}
+
+bool SmartMath::SmartNumber::operator!=(const SmartMath::SmartNumber &other) const {
+    return !(*this == other);
+}
+
+SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartNumber &other) const {
+    switch (tag) {
+        case INTEGER: {
+            long long res = std::get<int>(value) + std::get<int>(other.value);
+            if (res == (int) res) {
+                return {(int) res};
+            } else {
+                return {res};
+            }
+        }
+        case LLONG: {
+            long long a = std::get<long long>(value);
+            long long b = std::get<long long>(other.value);
+            if (a > std::numeric_limits<long long>::max() - b) {
+                return {std::numeric_limits<long long>::max()};
+            }
+            if (a < std::numeric_limits<long long>::min() - b) {
+                return {std::numeric_limits<long long>::min()};
+            }
+            return {a + b};
+        }
+        case DOUBLE: {
+            double a = std::get<double>(value);
+            double b = std::get<double>(other.value);
+            if (a > std::numeric_limits<double>::max() - b) {
+                return {std::numeric_limits<double>::max()};
+            }
+            if (a < -std::numeric_limits<double>::max() - b) {
+                return {-std::numeric_limits<double>::max()};
+            }
+            return {a + b};
+        }
+        default: {
+            return {0};
+        }
+    }
 }
 
 SmartMath::SmartNumber::~SmartNumber() = default;
