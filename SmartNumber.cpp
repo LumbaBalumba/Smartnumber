@@ -113,7 +113,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
                 }
                 case INTEGER: {
                     long long a = std::get<long long>(value);
-                    int b = std::get<int>(value);
+                    long long b = std::get<int>(other.value);
                     if (a > std::numeric_limits<long long>::max() - b) {
                         return {std::numeric_limits<long long>::max()};
                     }
