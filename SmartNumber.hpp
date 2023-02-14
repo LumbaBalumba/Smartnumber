@@ -9,7 +9,7 @@
 #include <climits>
 
 namespace SmartMath {
-    double evaluate(const std::string& str);
+    double evaluate(const std::string &str);
 
     class SmartNumber {
     private:
@@ -53,9 +53,9 @@ namespace SmartMath {
 
         SmartNumber operator/(const SmartNumber &other);
 
-        SmartNumber operator==(const SmartNumber &other);
+        bool operator==(const SmartNumber &other);
 
-        SmartNumber operator!=(const SmartNumber &other);
+        bool operator!=(const SmartNumber &other);
 
         SmartNumber &operator+=(const SmartNumber &other);
 
