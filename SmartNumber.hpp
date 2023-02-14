@@ -7,6 +7,7 @@
 
 #include <string>
 #include <climits>
+#include <variant>
 
 namespace SmartMath {
     double evaluate(const std::string &str);
@@ -19,15 +20,7 @@ namespace SmartMath {
             DOUBLE
         } tag;
 
-        union v_union {
-            int i_value{};
-            long long l_value;
-            double d_value;
-
-            v_union() {}
-
-            ~v_union() {}
-        } value;
+        std::variant<int, long long, double> value;
 
         void
         normalize();
@@ -41,9 +34,11 @@ namespace SmartMath {
 
         explicit SmartNumber(double number);
 
+        explicit SmartNumber(const std::string &number);
+
         ~SmartNumber();
 
-        char *type();
+        std::string type();
 
         SmartNumber operator+(const SmartNumber &other);
 

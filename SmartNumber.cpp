@@ -6,32 +6,50 @@
 #include <set>
 #include <cmath>
 
+#include <iostream>
+
 typedef ssize_t index_t;
 
 SmartMath::SmartNumber::SmartNumber() {
     tag = INTEGER;
-    value.i_value = 0;
+    value = 0;
 }
 
 SmartMath::SmartNumber::SmartNumber(int number) {
     tag = INTEGER;
-    value.i_value = number;
+    value = number;
 }
 
 SmartMath::SmartNumber::SmartNumber(long long int number) {
     tag = LLONG;
-    value.l_value = number;
+    value = number;
 }
 
 SmartMath::SmartNumber::SmartNumber(double number) {
     tag = DOUBLE;
-    value.d_value = number;
+    value = number;
+}
+
+SmartMath::SmartNumber::SmartNumber(const std::string &number) {
+    tag = DOUBLE;
+    value = evaluate(number);
+}
+
+std::string SmartMath::SmartNumber::type() {
+    if (tag == INTEGER) {
+        return "int";
+    } else if (tag == LLONG) {
+        return "long long";
+    } else if (tag == DOUBLE) {
+        return "double";
+    }
+    return "undefined";
 }
 
 SmartMath::SmartNumber::~SmartNumber() = default;
 
 static index_t sign_separate(const std::string &str, const std::set<char> &separators) {
-    long balance = 0;
+    int balance = 0;
     for (index_t index = (index_t) str.size() - 1; index >= 0; --index) {
         if (str[index] == ')') {
             balance++;
@@ -102,7 +120,6 @@ double SmartMath::evaluate(const std::string &str) {
             } else if (tmp == "atan(") {
                 return atan(evaluate(slice(str, 5, (index_t) str.size() - 1)));
             }
-
         }
     }
     return strtod(str.c_str(), nullptr);
