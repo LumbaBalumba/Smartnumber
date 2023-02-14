@@ -8,14 +8,26 @@
 #include <string>
 #include <climits>
 
-namespace SmartNumber
-{
-    class SmartNumber
-    {
-    private:
-        char state;
+namespace SmartMath {
+    double evaluate(const std::string& str);
 
-        void *value_ptr;
+    class SmartNumber {
+    private:
+        enum {
+            INTEGER,
+            LLONG,
+            DOUBLE
+        } tag;
+
+        union v_union {
+            int i_value{};
+            long long l_value;
+            double d_value;
+
+            v_union() {}
+
+            ~v_union() {}
+        } value;
 
         void
         normalize();
@@ -29,42 +41,29 @@ namespace SmartNumber
 
         explicit SmartNumber(double number);
 
-        explicit SmartNumber(const std::string &number);
-
         ~SmartNumber();
 
-        std::string
-        type();
+        char *type();
 
-        SmartNumber
-        operator+(const SmartNumber &other);
+        SmartNumber operator+(const SmartNumber &other);
 
-        SmartNumber
-        operator-(const SmartNumber &other);
+        SmartNumber operator-(const SmartNumber &other);
 
-        SmartNumber
-        operator*(const SmartNumber &other);
+        SmartNumber operator*(const SmartNumber &other);
 
-        SmartNumber
-        operator/(const SmartNumber &other);
+        SmartNumber operator/(const SmartNumber &other);
 
-        SmartNumber
-        operator==(const SmartNumber &other);
+        SmartNumber operator==(const SmartNumber &other);
 
-        SmartNumber
-        operator!=(const SmartNumber &other);
+        SmartNumber operator!=(const SmartNumber &other);
 
-        SmartNumber &
-        operator+=(const SmartNumber &other);
+        SmartNumber &operator+=(const SmartNumber &other);
 
-        SmartNumber &
-        operator-=(const SmartNumber &other);
+        SmartNumber &operator-=(const SmartNumber &other);
 
-        SmartNumber &
-        operator*=(const SmartNumber &other);
+        SmartNumber &operator*=(const SmartNumber &other);
 
-        SmartNumber &
-        operator/=(const SmartNumber &other);
+        SmartNumber &operator/=(const SmartNumber &other);
     };
 }
 

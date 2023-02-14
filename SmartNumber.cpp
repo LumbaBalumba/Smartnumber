@@ -3,53 +3,78 @@
 //
 
 #include "SmartNumber.hpp"
+#include <set>
 
-SmartNumber::SmartNumber::SmartNumber()
-{
-    state = 'i';
-    value_ptr = new int;
-    *(int *) value_ptr = 0;
+typedef ssize_t index_t;
+
+SmartMath::SmartNumber::SmartNumber() {
+    tag = INTEGER;
+    value.i_value = 0;
 }
 
-SmartNumber::SmartNumber::SmartNumber(int number)
-{
-    state = 'i';
-    value_ptr = new int;
-    *(int *) value_ptr = number;
+SmartMath::SmartNumber::SmartNumber(int number) {
+    tag = INTEGER;
+    value.i_value = number;
 }
 
-SmartNumber::SmartNumber::SmartNumber(long long int number)
-{
-    state = 'l';
-    value_ptr = new long long;
-    *(long long *) value_ptr = number;
+SmartMath::SmartNumber::SmartNumber(long long int number) {
+    tag = LLONG;
+    value.l_value = number;
 }
 
-SmartNumber::SmartNumber::SmartNumber(double number)
-{
-    state = 'd';
-    value_ptr = new double;
-    *(double *) value_ptr = number;
+SmartMath::SmartNumber::SmartNumber(double number) {
+    tag = DOUBLE;
+    value.d_value = number;
 }
 
-SmartNumber::SmartNumber::SmartNumber(const std::string &number)
-{
-    state = 's';
-    value_ptr = new std::string;
-    *(std::string *) value_ptr = number;
+SmartMath::SmartNumber::~SmartNumber() = default;
+
+static index_t sign_separate(const std::string &str, const std::set<char> &separators) {
+    long balance = 0;
+    for (index_t index = (index_t) str.size() - 1; index >= 0; --index) {
+        if (str[index] == ')') {
+            balance++;
+        } else if (str[index] == '(') {
+            balance--;
+        } else if (separators.contains(str[index]) && balance) {
+            return index;
+        }
+    }
+    return -1;
 }
 
-SmartNumber::SmartNumber::~SmartNumber()
-{
-    if (state == 'i') {
-        delete (int *) value_ptr;
-    } else if (state == 'l') {
-        delete (long long *) value_ptr;
-    } else if (state == 'd') {
-        delete (double *) value_ptr;
-    } else if (state == 's') {
-        delete (std::string *) value_ptr;
+static std::string slice(const std::string &str, index_t left, index_t right) {
+    std::string res;
+    for (index_t index = left; index < right; ++index) {
+        res += str[index];
+    }
+    return res;
+}
+
+double SmartMath::evaluate(const std::string &str) {
+    std::set<char> signs;
+    signs.insert('+');
+    signs.insert('-');
+    index_t sign_index = sign_separate(str, signs);
+    if (sign_index >= 0) {
+        if (str[sign_index] == '+') {
+            return evaluate(slice(str, 0, sign_index)) + evaluate(slice(str, sign_index + 1, (index_t) str.size()));
+        } else {
+            return evaluate(slice(str, 0, sign_index)) - evaluate(slice(str, sign_index + 1, (index_t) str.size()));
+        }
+    }
+    signs.clear();
+    signs.insert('*');
+    signs.insert('/');
+    sign_index = sign_separate(str, signs);
+    if (sign_index >= 0) {
+        if (str[sign_index] == '*') {
+            return evaluate(slice(str, 0, sign_index)) * evaluate(slice(str, sign_index + 1, (index_t) str.size()));
+        } else {
+            return evaluate(slice(str, 0, sign_index)) / evaluate(slice(str, sign_index + 1, (index_t) str.size()));
+        }
+    }
+    if (str[0] == '(' && str[str.size() - 1] == ')') {
+        return evaluate(slice(str, 1, str.size() - 1));
     }
 }
-
-
