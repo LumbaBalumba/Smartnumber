@@ -7,10 +7,16 @@
 
 #include <string>
 #include <variant>
+#include <iostream>
 
 namespace SmartMath {
 
     class EvaluationError : public std::exception {
+    public:
+        [[nodiscard]] const char *what() const noexcept override;
+    };
+
+    class ConversionError : public std::exception {
     public:
         [[nodiscard]] const char *what() const noexcept override;
     };
@@ -21,7 +27,7 @@ namespace SmartMath {
     private:
         enum {
             INTEGER,
-            LLONG,
+            LONG_LONG,
             DOUBLE
         } tag;
 
@@ -65,7 +71,26 @@ namespace SmartMath {
         SmartNumber &operator*=(const SmartNumber &other);
 
         SmartNumber &operator/=(const SmartNumber &other);
+
+        friend std::istream &operator>>(const std::istream &in, const SmartNumber &number);
+
+        friend std::ostream &operator<<(std::ostream &out, const SmartNumber &number) {
+            switch (number.tag) {
+                case SmartNumber::INTEGER: {
+                    out << std::get<int>(number.value);
+                    break;
+                }
+                case SmartNumber::LONG_LONG:
+                    out << std::get<long long>(number.value);
+                    break;
+                case SmartNumber::DOUBLE:
+                    out << std::get<double>(number.value);
+                    break;
+            }
+            return out;
+        }
     };
+
 }
 
 

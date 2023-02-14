@@ -5,7 +5,6 @@
 #include "SmartNumber.hpp"
 #include <set>
 #include <cmath>
-#include <climits>
 #include <limits>
 
 typedef ssize_t index_t;
@@ -23,7 +22,7 @@ SmartMath::SmartNumber::SmartNumber(int number) {
 }
 
 SmartMath::SmartNumber::SmartNumber(long long int number) {
-    tag = LLONG;
+    tag = LONG_LONG;
     value = number;
 }
 
@@ -40,7 +39,7 @@ SmartMath::SmartNumber::SmartNumber(const std::string &number) {
 std::string SmartMath::SmartNumber::type() {
     if (tag == INTEGER) {
         return "int";
-    } else if (tag == LLONG) {
+    } else if (tag == LONG_LONG) {
         return "long long";
     } else if (tag == DOUBLE) {
         return "double";
@@ -52,7 +51,7 @@ bool SmartMath::SmartNumber::operator==(const SmartMath::SmartNumber &other) con
     if (tag != other.tag) {
         return false;
     }
-    if (tag == INTEGER || tag == LLONG) {
+    if (tag == INTEGER || tag == LONG_LONG) {
         return value == other.value;
     } else {
         return fabs(std::get<double>(value) - std::get<double>(other.value)) < eps;
@@ -66,37 +65,96 @@ bool SmartMath::SmartNumber::operator!=(const SmartMath::SmartNumber &other) con
 SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartNumber &other) const {
     switch (tag) {
         case INTEGER: {
-            long long res = std::get<int>(value) + std::get<int>(other.value);
-            if (res == (int) res) {
-                return {(int) res};
-            } else {
-                return {res};
+            switch (other.tag) {
+                case INTEGER: {
+                    long long res = std::get<int>(value) + std::get<int>(other.value);
+                    if (res == (int) res) {
+                        return {(int) res};
+                    } else {
+                        return {res};
+                    }
+                }
+                case LONG_LONG: {
+                    long long a = std::get<int>(value);
+                    long long b = std::get<long long>(other.value);
+                    if (a > std::numeric_limits<long long>::max() - b) {
+                        return {std::numeric_limits<long long>::max()};
+                    }
+                    if (a < std::numeric_limits<long long>::min() - b) {
+                        return {std::numeric_limits<long long>::min()};
+                    }
+                    return {a + b};
+                }
+                case DOUBLE: {
+                    double a = std::get<int>(value);
+                    double b = std::get<double>(other.value);
+                    if (a > std::numeric_limits<double>::max() - b) {
+                        return {std::numeric_limits<double>::max()};
+                    }
+                    if (a < -std::numeric_limits<double>::max() - b) {
+                        return {-std::numeric_limits<double>::max()};
+                    }
+                    return {a + b};
+                }
             }
         }
-        case LLONG: {
-            long long a = std::get<long long>(value);
-            long long b = std::get<long long>(other.value);
-            if (a > std::numeric_limits<long long>::max() - b) {
-                return {std::numeric_limits<long long>::max()};
+        case LONG_LONG: {
+            switch (tag) {
+                case LONG_LONG: {
+                    long long a = std::get<long long>(value);
+                    long long b = std::get<long long>(other.value);
+                    if (a > std::numeric_limits<long long>::max() - b) {
+                        return {std::numeric_limits<long long>::max()};
+                    }
+                    if (a < std::numeric_limits<long long>::min() - b) {
+                        return {std::numeric_limits<long long>::min()};
+                    }
+                    return {a + b};
+                }
+                case INTEGER: {
+                    long long a = std::get<long long>(value);
+                    int b = std::get<int>(value);
+                    if (a > std::numeric_limits<long long>::max() - b) {
+                        return {std::numeric_limits<long long>::max()};
+                    }
+                    if (a < std::numeric_limits<long long>::min() - b) {
+                        return {std::numeric_limits<long long>::min()};
+                    }
+                    return {a + b};
+                }
+                case DOUBLE: {
+                    throw (SmartMath::ConversionError());
+                }
             }
-            if (a < std::numeric_limits<long long>::min() - b) {
-                return {std::numeric_limits<long long>::min()};
-            }
-            return {a + b};
         }
         case DOUBLE: {
-            double a = std::get<double>(value);
-            double b = std::get<double>(other.value);
-            if (a > std::numeric_limits<double>::max() - b) {
-                return {std::numeric_limits<double>::max()};
+            switch (tag) {
+                case DOUBLE: {
+                    double a = std::get<double>(value);
+                    double b = std::get<double>(other.value);
+                    if (a > std::numeric_limits<double>::max() - b) {
+                        return {std::numeric_limits<double>::max()};
+                    }
+                    if (a < -std::numeric_limits<double>::max() - b) {
+                        return {-std::numeric_limits<double>::max()};
+                    }
+                    return {a + b};
+                }
+                case INTEGER: {
+                    double a = std::get<double>(value);
+                    double b = std::get<int>(other.value);
+                    if (a > std::numeric_limits<double>::max() - b) {
+                        return {std::numeric_limits<double>::max()};
+                    }
+                    if (a < -std::numeric_limits<double>::max() - b) {
+                        return {-std::numeric_limits<double>::max()};
+                    }
+                    return {a + b};
+                }
+                case LONG_LONG: {
+                    throw (ConversionError());
+                }
             }
-            if (a < -std::numeric_limits<double>::max() - b) {
-                return {-std::numeric_limits<double>::max()};
-            }
-            return {a + b};
-        }
-        default: {
-            return {0};
         }
     }
 }
@@ -202,4 +260,8 @@ double SmartMath::evaluate(const std::string &str) {
 
 const char *SmartMath::EvaluationError::what() const noexcept {
     return "Error while evaluating a string";
+}
+
+const char *SmartMath::ConversionError::what() const noexcept {
+    return "Type conversion impossible for these types";
 }
