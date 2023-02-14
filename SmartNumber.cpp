@@ -119,8 +119,23 @@ double SmartMath::evaluate(const std::string &str) {
                 return acos(evaluate(slice(str, 5, (index_t) str.size() - 1)));
             } else if (tmp == "atan(") {
                 return atan(evaluate(slice(str, 5, (index_t) str.size() - 1)));
+            } else if (tmp == "sinh(") {
+                return sinh(evaluate(slice(str, 5, (index_t) str.size() - 1)));
+            } else if (tmp == "cosh(") {
+                return cosh(evaluate(slice(str, 5, (index_t) str.size() - 1)));
+            } else if (tmp == "tanh(") {
+                return tanh(evaluate(slice(str, 5, (index_t) str.size() - 1)));
+            } else if (tmp == "sqrt(") {
+                return sqrt(evaluate(slice(str, 5, (index_t) str.size() - 1)));
+            }
+            tmp = slice(str, 0, 6);
+            if (tmp == "floor(") {
+                return floor(evaluate(slice(str, 6, (index_t) str.size() - 1)));
             }
         }
+    }
+    if (str[str.size() - 1] == '|' && str[0] == '|') {
+        return fabs(evaluate(slice(str, 1, (index_t) str.size() - 1)));
     }
     return strtod(str.c_str(), nullptr);
 }
