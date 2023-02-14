@@ -75,6 +75,7 @@ double SmartMath::evaluate(const std::string &str) {
         }
     }
     if (str[0] == '(' && str[str.size() - 1] == ')') {
-        return evaluate(slice(str, 1, str.size() - 1));
+        return evaluate(slice(str, 1, (index_t) str.size() - 1));
     }
+    return strtod(str.c_str(), nullptr);
 }
