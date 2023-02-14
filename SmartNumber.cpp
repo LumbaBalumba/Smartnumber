@@ -157,6 +157,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
             }
         }
     }
+    return {0};
 }
 
 SmartMath::SmartNumber::~SmartNumber() = default;
