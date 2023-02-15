@@ -2,8 +2,8 @@
 // Created by i3alumba on 13.02.23.
 //
 
-#ifndef SMARTNUMBER_SMARTNUMBER_HPP
-#define SMARTNUMBER_SMARTNUMBER_HPP
+#ifndef SMARTMATH_SMARTNUMBER_HPP
+#define SMARTMATH_SMARTNUMBER_HPP
 
 #include <string>
 #include <variant>
@@ -93,4 +93,4 @@ namespace SmartMath {
 
 }
 
-#endif //SMARTNUMBER_SMARTNUMBER_HPP
+#endif //SMARTMATH_SMARTNUMBER_HPP

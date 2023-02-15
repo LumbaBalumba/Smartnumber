@@ -2,7 +2,7 @@
 // Created by i3alumba on 13.02.23.
 //
 
-#include "SmartNumber.hpp"
+#include "SmartMath.hpp"
 #include <set>
 #include <cmath>
 #include <limits>
@@ -412,6 +412,31 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
         }
     }
     return {0};
+}
+
+SmartMath::SmartNumber &SmartMath::SmartNumber::operator=(const SmartMath::SmartNumber &other) {
+    if (this == &other) {
+        return *this;
+    }
+    tag = other.tag;
+    value = other.value;
+    return *this;
+}
+
+SmartMath::SmartNumber &SmartMath::SmartNumber::operator+=(const SmartMath::SmartNumber &other) {
+    return *this = *this + other;
+}
+
+SmartMath::SmartNumber &SmartMath::SmartNumber::operator-=(const SmartMath::SmartNumber &other) {
+    return *this = *this - other;
+}
+
+SmartMath::SmartNumber &SmartMath::SmartNumber::operator*=(const SmartMath::SmartNumber &other) {
+    return *this = *this * other;
+}
+
+SmartMath::SmartNumber &SmartMath::SmartNumber::operator/=(const SmartMath::SmartNumber &other) {
+    return *this = *this / other;
 }
 
 SmartMath::SmartNumber::~SmartNumber() = default;
