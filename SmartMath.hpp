@@ -23,6 +23,43 @@ namespace SmartMath {
 
     double evaluate(const std::string &str);
 
+    class BigInteger {
+    private:
+        std::string value;
+    public:
+        BigInteger();
+
+        BigInteger(int value);
+
+        BigInteger(long long value);
+
+        BigInteger(const BigInteger &other);
+
+        ~BigInteger();
+
+        BigInteger operator+(const BigInteger &other) const;
+
+        BigInteger operator-(const BigInteger &other) const;
+
+        BigInteger operator*(const BigInteger &other) const;
+
+        BigInteger operator/(const BigInteger &other) const;
+
+        BigInteger &operator+=(const BigInteger &other);
+
+        BigInteger &operator-=(const BigInteger &other);
+
+        BigInteger &operator*=(const BigInteger &other);
+
+        BigInteger &operator/=(const BigInteger &other);
+
+        BigInteger &operator=(const BigInteger &other);
+
+        bool operator==(const BigInteger &other) const;
+
+        bool operator!=(const BigInteger &other) const;
+    };
+
     class SmartNumber {
     private:
         enum {
@@ -43,6 +80,8 @@ namespace SmartMath {
         SmartNumber(long long number);
 
         SmartNumber(double number);
+
+        SmartNumber(const SmartNumber &other);
 
         explicit SmartNumber(const std::string &number);
 
@@ -72,7 +111,7 @@ namespace SmartMath {
 
         SmartNumber &operator/=(const SmartNumber &other);
 
-        friend std::istream &operator>>(const std::istream &in, const SmartNumber &number);
+        friend std::istream &operator>>(std::istream &in, SmartNumber &number);
 
         friend std::ostream &operator<<(std::ostream &out, const SmartNumber &number) {
             switch (number.tag) {

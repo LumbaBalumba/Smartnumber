@@ -439,6 +439,36 @@ SmartMath::SmartNumber &SmartMath::SmartNumber::operator/=(const SmartMath::Smar
     return *this = *this / other;
 }
 
+std::istream &SmartMath::operator>>(std::istream &in, SmartMath::SmartNumber &number) {
+    std::string buffer;
+    in >> buffer;
+    errno = 0;
+    char *eptr = nullptr;
+    long long i_value = strtoll(buffer.c_str(), &eptr, 10);
+    if (!errno && !eptr) {
+        if (i_value == (int) i_value) {
+            number = SmartNumber((int) i_value);
+            return in;
+        } else {
+            number = SmartNumber(i_value);
+            return in;
+        }
+    }
+    errno = 0;
+    eptr = nullptr;
+    double d_value = strtod(buffer.c_str(), &eptr);
+    if (!errno && !eptr) {
+        number = SmartNumber(d_value);
+        return in;
+    } else {
+        number = SmartNumber(buffer);
+        return in;
+    }
+
+}
+
+SmartMath::SmartNumber::SmartNumber(const SmartMath::SmartNumber &other) = default;
+
 SmartMath::SmartNumber::~SmartNumber() = default;
 
 static index_t sign_separate(const std::string &str, const std::set<char> &separators) {
