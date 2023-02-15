@@ -31,11 +31,11 @@ namespace SmartMath {
 
         BigInteger(int value);
 
-        BigInteger(long long value);
+        BigInteger(long long number);
 
-        BigInteger(const BigInteger &other);
+        BigInteger(const BigInteger &other) = default;
 
-        ~BigInteger();
+        ~BigInteger() = default;
 
         BigInteger operator+(const BigInteger &other) const;
 
@@ -53,7 +53,7 @@ namespace SmartMath {
 
         BigInteger &operator/=(const BigInteger &other);
 
-        BigInteger &operator=(const BigInteger &other);
+        BigInteger &operator=(const BigInteger &other) = default;
 
         bool operator==(const BigInteger &other) const;
 
@@ -111,7 +111,32 @@ namespace SmartMath {
 
         SmartNumber &operator/=(const SmartNumber &other);
 
-        friend std::istream &operator>>(std::istream &in, SmartNumber &number);
+        friend std::istream &operator>>(std::istream &in, SmartNumber &number) {
+            std::string buffer;
+            in >> buffer;
+            errno = 0;
+            char *eptr = nullptr;
+            long long i_value = strtoll(buffer.c_str(), &eptr, 10);
+            if (!errno && !eptr) {
+                if (i_value == (int) i_value) {
+                    number = SmartNumber((int) i_value);
+                    return in;
+                } else {
+                    number = SmartNumber(i_value);
+                    return in;
+                }
+            }
+            errno = 0;
+            eptr = nullptr;
+            double d_value = strtod(buffer.c_str(), &eptr);
+            if (!errno && !eptr) {
+                number = SmartNumber(d_value);
+                return in;
+            } else {
+                number = SmartNumber(buffer);
+                return in;
+            }
+        }
 
         friend std::ostream &operator<<(std::ostream &out, const SmartNumber &number) {
             switch (number.tag) {
