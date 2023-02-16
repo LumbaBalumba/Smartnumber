@@ -448,6 +448,7 @@ bool SmartMath::SmartNumber::operator>(const SmartMath::SmartNumber &other) cons
             return std::get<double>(value) > 0;
         }
     }
+    return true;
 }
 
 bool SmartMath::SmartNumber::operator>=(const SmartMath::SmartNumber &other) const {
@@ -463,6 +464,7 @@ bool SmartMath::SmartNumber::operator>=(const SmartMath::SmartNumber &other) con
             return std::get<double>(value) >= 0;
         }
     }
+    return true;
 }
 
 bool SmartMath::SmartNumber::operator<(const SmartMath::SmartNumber &other) const {
@@ -478,6 +480,7 @@ bool SmartMath::SmartNumber::operator<(const SmartMath::SmartNumber &other) cons
             return std::get<double>(value) < 0;
         }
     }
+    return true;
 }
 
 bool SmartMath::SmartNumber::operator<=(const SmartMath::SmartNumber &other) const {
@@ -493,6 +496,7 @@ bool SmartMath::SmartNumber::operator<=(const SmartMath::SmartNumber &other) con
             return std::get<double>(value) <= 0;
         }
     }
+    return true;
 }
 
 SmartMath::SmartNumber SmartMath::SmartNumber::operator-() const {
