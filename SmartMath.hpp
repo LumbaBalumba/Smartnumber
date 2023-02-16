@@ -70,8 +70,6 @@ namespace SmartMath {
 
         std::variant<int, long long, double> value;
 
-        void normalize();
-
     public:
         SmartNumber();
 
