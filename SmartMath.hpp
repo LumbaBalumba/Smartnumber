@@ -8,6 +8,7 @@
 #include <string>
 #include <variant>
 #include <iostream>
+#include <algorithm>
 
 typedef ssize_t index_t;
 
@@ -22,6 +23,12 @@ namespace SmartMath {
     public:
         [[nodiscard]] const char *what() const noexcept override;
     };
+
+    class IncorrectInputError : public std::exception {
+    public:
+        [[nodiscard]] const char *what() const noexcept override;
+    };
+
 
     double evaluate(const std::string &str);
 
@@ -60,6 +67,34 @@ namespace SmartMath {
         bool operator==(const BigInteger &other) const;
 
         bool operator!=(const BigInteger &other) const;
+
+        friend std::istream &operator>>(std::istream &in, BigInteger &number) {
+            std::string buffer;
+            in >> buffer;
+            for (auto &i: buffer) {
+                if (i > '9' || i < '0') {
+                    throw (IncorrectInputError());
+                }
+            }
+            if (buffer == "0") {
+                number.value = "";
+            } else {
+                std::reverse(buffer.begin(), buffer.end());
+                number.value = buffer;
+            }
+            return in;
+        }
+
+        friend std::ostream &operator<<(std::ostream &out, const BigInteger &number) {
+            if (number.value.empty()) {
+                out << 0;
+            } else {
+                std::string buffer = number.value;
+                std::reverse(buffer.begin(), buffer.end());
+                out << buffer;
+            }
+            return out;
+        }
     };
 
     class SmartNumber {

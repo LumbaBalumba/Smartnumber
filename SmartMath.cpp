@@ -100,7 +100,7 @@ double SmartMath::evaluate(const std::string &str) {
     char *eptr = nullptr;
     double res = strtod(str.c_str(), &eptr);
     if (*eptr || errno) {
-        throw (EvaluationError());
+        throw (SmartMath::ConversionError());
     }
     return res;
 }
@@ -114,3 +114,6 @@ const char *SmartMath::ConversionError::what() const noexcept {
 }
 
 
+const char *SmartMath::IncorrectInputError::what() const noexcept {
+    return "";
+}

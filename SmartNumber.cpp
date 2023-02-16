@@ -2,8 +2,6 @@
 // Created by i3alumba on 16.02.23.
 //
 #include "SmartMath.hpp"
-#include "SmartMath.hpp"
-#include <set>
 #include <cmath>
 #include <limits>
 
