@@ -119,7 +119,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
                     return {a + b};
                 }
                 case DOUBLE: {
-                    throw (SmartMath::ConversionError());
+                    throw SmartMath::ConversionError();
                 }
             }
         }
@@ -148,7 +148,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
                     return {a + b};
                 }
                 case LONG_LONG: {
-                    throw (ConversionError());
+                    throw ConversionError();
                 }
             }
         }
@@ -217,7 +217,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator-(const SmartMath::SmartN
                     return {a - b};
                 }
                 case DOUBLE: {
-                    throw (SmartMath::ConversionError());
+                    throw SmartMath::ConversionError();
                 }
             }
         }
@@ -246,7 +246,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator-(const SmartMath::SmartN
                     return {a - b};
                 }
                 case LONG_LONG: {
-                    throw (ConversionError());
+                    throw ConversionError();
                 }
             }
         }
@@ -315,7 +315,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator*(const SmartMath::SmartN
                     return {a * b};
                 }
                 case DOUBLE: {
-                    throw (SmartMath::ConversionError());
+                    throw SmartMath::ConversionError();
                 }
             }
         }
@@ -344,7 +344,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator*(const SmartMath::SmartN
                     return {a * b};
                 }
                 case LONG_LONG: {
-                    throw (ConversionError());
+                    throw ConversionError();
                 }
             }
         }
@@ -385,7 +385,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
                     return {a / b};
                 }
                 case DOUBLE: {
-                    throw (SmartMath::ConversionError());
+                    throw ConversionError();
                 }
             }
         }
@@ -402,7 +402,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
                     return {a / b};
                 }
                 case LONG_LONG: {
-                    throw (ConversionError());
+                    throw ConversionError();
                 }
             }
         }
@@ -433,6 +433,108 @@ SmartMath::SmartNumber &SmartMath::SmartNumber::operator*=(const SmartMath::Smar
 
 SmartMath::SmartNumber &SmartMath::SmartNumber::operator/=(const SmartMath::SmartNumber &other) {
     return *this = *this / other;
+}
+
+bool SmartMath::SmartNumber::operator>(const SmartMath::SmartNumber &other) const {
+    SmartNumber tmp = *this - other;
+    switch (tmp.tag) {
+        case INTEGER: {
+            return std::get<int>(value) > 0;
+        }
+        case LONG_LONG: {
+            return std::get<long long>(value) > 0;
+        }
+        case DOUBLE: {
+            return std::get<double>(value) > 0;
+        }
+    }
+}
+
+bool SmartMath::SmartNumber::operator>=(const SmartMath::SmartNumber &other) const {
+    SmartNumber tmp = *this - other;
+    switch (tmp.tag) {
+        case INTEGER: {
+            return std::get<int>(value) >= 0;
+        }
+        case LONG_LONG: {
+            return std::get<long long>(value) >= 0;
+        }
+        case DOUBLE: {
+            return std::get<double>(value) >= 0;
+        }
+    }
+}
+
+bool SmartMath::SmartNumber::operator<(const SmartMath::SmartNumber &other) const {
+    SmartNumber tmp = *this - other;
+    switch (tmp.tag) {
+        case INTEGER: {
+            return std::get<int>(value) < 0;
+        }
+        case LONG_LONG: {
+            return std::get<long long>(value) < 0;
+        }
+        case DOUBLE: {
+            return std::get<double>(value) < 0;
+        }
+    }
+}
+
+bool SmartMath::SmartNumber::operator<=(const SmartMath::SmartNumber &other) const {
+    SmartNumber tmp = *this - other;
+    switch (tmp.tag) {
+        case INTEGER: {
+            return std::get<int>(value) <= 0;
+        }
+        case LONG_LONG: {
+            return std::get<long long>(value) <= 0;
+        }
+        case DOUBLE: {
+            return std::get<double>(value) <= 0;
+        }
+    }
+}
+
+SmartMath::SmartNumber SmartMath::SmartNumber::operator-() const {
+    return *this * -1;
+}
+
+SmartMath::SmartNumber &SmartMath::SmartNumber::operator++() {
+    if (tag == INTEGER || tag == LONG_LONG) {
+        return *this += 1;
+    } else {
+        throw ConversionError();
+    }
+}
+
+SmartMath::SmartNumber SmartMath::SmartNumber::operator++(int) {
+    if (tag == INTEGER || tag == LONG_LONG) {
+        SmartNumber res = *this;
+        *this += 1;
+        return res;
+    } else {
+
+        throw ConversionError();
+    }
+}
+
+SmartMath::SmartNumber &SmartMath::SmartNumber::operator--() {
+    if (tag == INTEGER || tag == LONG_LONG) {
+        return *this -= 1;
+    } else {
+        throw ConversionError();
+    }
+}
+
+SmartMath::SmartNumber SmartMath::SmartNumber::operator--(int) {
+    if (tag == INTEGER || tag == LONG_LONG) {
+        SmartNumber res = *this;
+        *this -= 1;
+        return res;
+    } else {
+
+        throw ConversionError();
+    }
 }
 
 SmartMath::SmartNumber::SmartNumber(const SmartMath::SmartNumber &other) = default;

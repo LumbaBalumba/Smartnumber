@@ -35,6 +35,8 @@ namespace SmartMath {
     class BigInteger {
     private:
         std::string value;
+        bool sign;
+
     public:
         BigInteger();
 
@@ -67,6 +69,25 @@ namespace SmartMath {
         bool operator==(const BigInteger &other) const;
 
         bool operator!=(const BigInteger &other) const;
+
+        bool operator>(const BigInteger &other) const;
+
+        bool operator>=(const BigInteger &other) const;
+
+        bool operator<(const BigInteger &other) const;
+
+        bool operator<=(const BigInteger &other) const;
+
+        BigInteger operator-() const;
+
+        BigInteger &operator++();
+
+        BigInteger operator++(int);
+
+        BigInteger &operator--();
+
+        BigInteger operator--(int);
+
 
         friend std::istream &operator>>(std::istream &in, BigInteger &number) {
             std::string buffer;
@@ -135,6 +156,24 @@ namespace SmartMath {
         bool operator==(const SmartNumber &other) const;
 
         bool operator!=(const SmartNumber &other) const;
+
+        bool operator>(const SmartNumber &other) const;
+
+        bool operator>=(const SmartNumber &other) const;
+
+        bool operator<(const SmartNumber &other) const;
+
+        bool operator<=(const SmartNumber &other) const;
+
+        SmartNumber operator-() const;
+
+        SmartNumber &operator++();
+
+        SmartNumber operator++(int);
+
+        SmartNumber &operator--();
+
+        SmartNumber operator--(int);
 
         SmartNumber &operator=(const SmartNumber &other);
 
