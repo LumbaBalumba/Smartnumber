@@ -68,9 +68,9 @@ SmartMath::BigInteger SmartMath::BigInteger::operator+(const SmartMath::BigInteg
     SmartMath::BigInteger res;
     bool sign_swap = false;
     if (!sign && other.sign) {
-        return other - *this;
+        return other - -*this;
     } else if (sign && !other.sign) {
-        return *this - other;
+        return *this - -other;
     } else if (!sign && !other.sign) {
         sign_swap = true;
     }
@@ -92,11 +92,32 @@ SmartMath::BigInteger SmartMath::BigInteger::operator+(const SmartMath::BigInteg
     if (sign_swap) {
         res = -res;
     }
+    res.normalize();
     return res;
 }
 
 SmartMath::BigInteger SmartMath::BigInteger::operator-(const SmartMath::BigInteger &other) const {
-    return SmartMath::BigInteger();
+    if (*this > other) {
+        bool overflow = false;
+        BigInteger res = {0};
+        for (index_t index = 0; index <= (index_t) value.size(); ++index) {
+            int n1 = get(value, index), n2 = get(other.value, index);
+            int n = n1 - n2 - (overflow ? 1 : 0);
+            if (n < 0) {
+                n += 10;
+                overflow = true;
+            } else {
+                overflow = false;
+            }
+            res.value += (char) (n + '0');
+        }
+        res.normalize();
+        return res;
+    } else if (*this == other) {
+        return {0};
+    } else {
+        return -(other - *this);
+    }
 }
 
 SmartMath::BigInteger SmartMath::BigInteger::operator*(const SmartMath::BigInteger &other) const {
@@ -108,19 +129,40 @@ SmartMath::BigInteger SmartMath::BigInteger::operator/(const SmartMath::BigInteg
 }
 
 bool SmartMath::BigInteger::operator>(const SmartMath::BigInteger &other) const {
-    return (*this - other).sign && (*this != other);
+    if (sign && other.sign) {
+        if (value.size() > other.value.size()) {
+            return true;
+        } else if (value.size() < other.value.size()) {
+            return false;
+        } else {
+            for (index_t index = (index_t) value.size() - 1; index >= 0; --index) {
+                if (value[index] > other.value[index]) {
+                    return true;
+                } else if (value[index] < other.value[index]) {
+                    return false;
+                }
+            }
+            return false;
+        }
+    } else if (sign && !other.sign) {
+        return true;
+    } else if (!sign && other.sign) {
+        return false;
+    } else {
+        return -other > -*this;
+    }
 }
 
 bool SmartMath::BigInteger::operator>=(const SmartMath::BigInteger &other) const {
-    return (*this - other).sign;
+    return *this > other || *this == other;
 }
 
 bool SmartMath::BigInteger::operator<(const SmartMath::BigInteger &other) const {
-    return !(*this - other).sign;
+    return !(*this >= other);
 }
 
 bool SmartMath::BigInteger::operator<=(const SmartMath::BigInteger &other) const {
-    return !(*this - other).sign || (*this == other);
+    return *this < other || *this == other;
 }
 
 SmartMath::BigInteger SmartMath::BigInteger::operator-() const {
@@ -147,6 +189,18 @@ SmartMath::BigInteger SmartMath::BigInteger::operator--(int) {
     BigInteger res = *this;
     *this -= 1;
     return res;
+}
+
+void SmartMath::BigInteger::normalize() {
+    size_t deleted = 0;
+    for (index_t index = (index_t) value.size() - 1; index >= 0; --index) {
+        if (value[index] != '0') {
+            break;
+        } else {
+            deleted++;
+        }
+    }
+    value.resize(value.size() - deleted);
 }
 
 

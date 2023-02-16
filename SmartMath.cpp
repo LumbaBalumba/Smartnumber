@@ -22,7 +22,7 @@ static index_t sign_separate(const std::string &str, const std::set<char> &separ
     return -1;
 }
 
-static std::string slice(const std::string &str, index_t left, index_t right) {
+std::string SmartMath::slice(const std::string &str, index_t left, index_t right) {
     std::string res;
     for (index_t index = left; index < right; ++index) {
         res += str[index];
@@ -100,7 +100,7 @@ double SmartMath::evaluate(const std::string &str) {
     char *eptr = nullptr;
     double res = strtod(str.c_str(), &eptr);
     if (*eptr || errno) {
-        throw (SmartMath::ConversionError());
+        throw EvaluationError();
     }
     return res;
 }
@@ -112,7 +112,6 @@ const char *SmartMath::EvaluationError::what() const noexcept {
 const char *SmartMath::ConversionError::what() const noexcept {
     return "Type conversion impossible for these types";
 }
-
 
 const char *SmartMath::IncorrectInputError::what() const noexcept {
     return "";

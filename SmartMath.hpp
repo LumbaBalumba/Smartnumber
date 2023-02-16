@@ -13,6 +13,7 @@
 typedef ssize_t index_t;
 
 namespace SmartMath {
+    std::string slice(const std::string &str, index_t left, index_t right);
 
     class EvaluationError : public std::exception {
     public:
@@ -35,7 +36,10 @@ namespace SmartMath {
     class BigInteger {
     private:
         std::string value;
+
         bool sign;
+
+        void normalize();
 
     public:
         BigInteger();
@@ -92,9 +96,13 @@ namespace SmartMath {
         friend std::istream &operator>>(std::istream &in, BigInteger &number) {
             std::string buffer;
             in >> buffer;
-            for (auto &i: buffer) {
-                if (i > '9' || i < '0') {
-                    throw (IncorrectInputError());
+            if (buffer[0] == '-') {
+                number.sign = false;
+                buffer = slice(buffer, 1, (index_t) buffer.size());
+            }
+            for (char elem: buffer) {
+                if (elem > '9' || elem < '0') {
+                    throw IncorrectInputError();
                 }
             }
             if (buffer == "0") {
@@ -110,6 +118,9 @@ namespace SmartMath {
             if (number.value.empty()) {
                 out << 0;
             } else {
+                if (!number.sign) {
+                    out << "-";
+                }
                 std::string buffer = number.value;
                 std::reverse(buffer.begin(), buffer.end());
                 out << buffer;
