@@ -7,7 +7,6 @@
 #include <cmath>
 #include "SmartMath.hpp"
 
-typedef ssize_t index_t;
 
 static index_t sign_separate(const std::string &str, const std::set<char> &separators) {
     int balance = 0;

@@ -7,8 +7,6 @@
 #include <cmath>
 #include <limits>
 
-typedef ssize_t index_t;
-
 static const double eps = 0.00001;
 
 SmartMath::SmartNumber::SmartNumber() {

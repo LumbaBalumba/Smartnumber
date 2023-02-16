@@ -9,6 +9,8 @@
 #include <variant>
 #include <iostream>
 
+typedef ssize_t index_t;
+
 namespace SmartMath {
 
     class EvaluationError : public std::exception {
