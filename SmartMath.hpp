@@ -155,7 +155,7 @@ namespace SmartMath {
 
         SmartNumber(double number);
 
-        SmartNumber(const BigInteger& number);
+        SmartNumber(const BigInteger &number);
 
         SmartNumber(const SmartNumber &other);
 
