@@ -32,6 +32,12 @@ SmartMath::SmartNumber::SmartNumber(const std::string &number) {
     value = evaluate(number);
 }
 
+
+SmartMath::SmartNumber::SmartNumber(const SmartMath::BigInteger &number) {
+    tag = BIG_INTEGER;
+    value = number;
+}
+
 std::string SmartMath::SmartNumber::type() const {
     if (tag == INTEGER) {
         return "int";
@@ -92,6 +98,9 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
                     }
                     return {a + b};
                 }
+                case BIG_INTEGER: {
+                    return BigInteger(std::get<int>(value)) + std::get<BigInteger>(value);
+                }
             }
         }
         case LONG_LONG: {
@@ -121,6 +130,9 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
                 case DOUBLE: {
                     throw SmartMath::ConversionError();
                 }
+                case BIG_INTEGER: {
+                    return BigInteger(std::get<long long>(value)) + std::get<BigInteger>(other.value);
+                }
             }
         }
         case DOUBLE: {
@@ -148,6 +160,25 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator+(const SmartMath::SmartN
                     return {a + b};
                 }
                 case LONG_LONG: {
+                    throw ConversionError();
+                }
+                case BIG_INTEGER: {
+                    throw ConversionError();
+                }
+            }
+        }
+        case BIG_INTEGER: {
+            switch (other.tag) {
+                case INTEGER: {
+                    return BigInteger(std::get<int>(other.value)) + std::get<BigInteger>(value);
+                }
+                case LONG_LONG: {
+                    return BigInteger(std::get<long long>(other.value)) + std::get<BigInteger>(value);
+                }
+                case BIG_INTEGER: {
+                    return std::get<BigInteger>(other.value) + std::get<BigInteger>(value);
+                }
+                case DOUBLE: {
                     throw ConversionError();
                 }
             }
@@ -190,6 +221,9 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator-(const SmartMath::SmartN
                     }
                     return {a - b};
                 }
+                case BIG_INTEGER: {
+                    return BigInteger(std::get<int>(value)) + std::get<BigInteger>(other.value);
+                }
             }
         }
         case LONG_LONG: {
@@ -219,6 +253,9 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator-(const SmartMath::SmartN
                 case DOUBLE: {
                     throw SmartMath::ConversionError();
                 }
+                case BIG_INTEGER: {
+                    return BigInteger(std::get<long long>(value)) + std::get<BigInteger>(other.value);
+                }
             }
         }
         case DOUBLE: {
@@ -246,6 +283,24 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator-(const SmartMath::SmartN
                     return {a - b};
                 }
                 case LONG_LONG: {
+                    throw ConversionError();
+                }
+                case BIG_INTEGER:
+                    throw ConversionError();
+            }
+        }
+        case BIG_INTEGER: {
+            switch (other.tag) {
+                case INTEGER: {
+                    return std::get<BigInteger>(value) + BigInteger(std::get<int>(other.value));
+                }
+                case LONG_LONG: {
+                    return std::get<BigInteger>(value) + BigInteger(std::get<long long>(other.value));
+                }
+                case BIG_INTEGER: {
+                    return std::get<BigInteger>(value) + std::get<BigInteger>(other.value);
+                }
+                case DOUBLE: {
                     throw ConversionError();
                 }
             }
@@ -288,6 +343,9 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator*(const SmartMath::SmartN
                     }
                     return {a * b};
                 }
+                case BIG_INTEGER: {
+                    return BigInteger(std::get<int>(value)) + std::get<BigInteger>(other.value);
+                }
             }
         }
         case LONG_LONG: {
@@ -317,6 +375,9 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator*(const SmartMath::SmartN
                 case DOUBLE: {
                     throw SmartMath::ConversionError();
                 }
+                case BIG_INTEGER: {
+                    return BigInteger(std::get<long long>(value)) + std::get<BigInteger>(other.value);
+                }
             }
         }
         case DOUBLE: {
@@ -344,6 +405,25 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator*(const SmartMath::SmartN
                     return {a * b};
                 }
                 case LONG_LONG: {
+                    throw ConversionError();
+                }
+                case BIG_INTEGER: {
+                    throw ConversionError();
+                }
+            }
+        }
+        case BIG_INTEGER: {
+            switch (other.tag) {
+                case INTEGER: {
+                    return BigInteger(std::get<int>(value)) + std::get<BigInteger>(other.value);
+                }
+                case LONG_LONG: {
+                    return BigInteger(std::get<long long>(value)) + std::get<BigInteger>(other.value);
+                }
+                case BIG_INTEGER: {
+                    return std::get<BigInteger>(value) + std::get<BigInteger>(other.value);
+                }
+                case DOUBLE: {
                     throw ConversionError();
                 }
             }
@@ -370,6 +450,9 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
                     double b = std::get<double>(other.value);
                     return {a / b};
                 }
+                case BIG_INTEGER: {
+                    return BigInteger(std::get<int>(value)) + std::get<BigInteger>(other.value);
+                }
             }
         }
         case LONG_LONG: {
@@ -387,6 +470,9 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
                 case DOUBLE: {
                     throw ConversionError();
                 }
+                case BIG_INTEGER: {
+                    return BigInteger(std::get<long long>(value)) + std::get<BigInteger>(other.value);
+                }
             }
         }
         case DOUBLE: {
@@ -402,6 +488,25 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
                     return {a / b};
                 }
                 case LONG_LONG: {
+                    throw ConversionError();
+                }
+                case BIG_INTEGER: {
+                    throw ConversionError();
+                }
+            }
+        }
+        case BIG_INTEGER: {
+            switch (other.tag) {
+                case INTEGER: {
+                    return BigInteger(std::get<int>(value)) + std::get<BigInteger>(other.value);
+                }
+                case LONG_LONG: {
+                    return BigInteger(std::get<long long>(value)) + std::get<BigInteger>(other.value);
+                }
+                case BIG_INTEGER: {
+                    return std::get<BigInteger>(value) + std::get<BigInteger>(other.value);
+                }
+                case DOUBLE: {
                     throw ConversionError();
                 }
             }
@@ -439,13 +544,16 @@ bool SmartMath::SmartNumber::operator>(const SmartMath::SmartNumber &other) cons
     SmartNumber tmp = *this - other;
     switch (tmp.tag) {
         case INTEGER: {
-            return std::get<int>(value) > 0;
+            return std::get<int>(tmp.value) > 0;
         }
         case LONG_LONG: {
-            return std::get<long long>(value) > 0;
+            return std::get<long long>(tmp.value) > 0;
         }
         case DOUBLE: {
-            return std::get<double>(value) > 0;
+            return std::get<double>(tmp.value) > 0;
+        }
+        case BIG_INTEGER: {
+            return std::get<BigInteger>(tmp.value) > 0;
         }
     }
     return true;
@@ -455,13 +563,16 @@ bool SmartMath::SmartNumber::operator>=(const SmartMath::SmartNumber &other) con
     SmartNumber tmp = *this - other;
     switch (tmp.tag) {
         case INTEGER: {
-            return std::get<int>(value) >= 0;
+            return std::get<int>(tmp.value) >= 0;
         }
         case LONG_LONG: {
-            return std::get<long long>(value) >= 0;
+            return std::get<long long>(tmp.value) >= 0;
         }
         case DOUBLE: {
-            return std::get<double>(value) >= 0;
+            return std::get<double>(tmp.value) >= 0;
+        }
+        case BIG_INTEGER: {
+            return std::get<BigInteger>(tmp.value) >= 0;
         }
     }
     return true;
@@ -471,13 +582,16 @@ bool SmartMath::SmartNumber::operator<(const SmartMath::SmartNumber &other) cons
     SmartNumber tmp = *this - other;
     switch (tmp.tag) {
         case INTEGER: {
-            return std::get<int>(value) < 0;
+            return std::get<int>(tmp.value) < 0;
         }
         case LONG_LONG: {
-            return std::get<long long>(value) < 0;
+            return std::get<long long>(tmp.value) < 0;
         }
         case DOUBLE: {
-            return std::get<double>(value) < 0;
+            return std::get<double>(tmp.value) < 0;
+        }
+        case BIG_INTEGER: {
+            return std::get<BigInteger>(tmp.value) < 0;
         }
     }
     return true;
@@ -487,13 +601,16 @@ bool SmartMath::SmartNumber::operator<=(const SmartMath::SmartNumber &other) con
     SmartNumber tmp = *this - other;
     switch (tmp.tag) {
         case INTEGER: {
-            return std::get<int>(value) <= 0;
+            return std::get<int>(tmp.value) <= 0;
         }
         case LONG_LONG: {
-            return std::get<long long>(value) <= 0;
+            return std::get<long long>(tmp.value) <= 0;
         }
         case DOUBLE: {
-            return std::get<double>(value) <= 0;
+            return std::get<double>(tmp.value) <= 0;
+        }
+        case BIG_INTEGER: {
+            return std::get<BigInteger>(tmp.value) <= 0;
         }
     }
     return true;

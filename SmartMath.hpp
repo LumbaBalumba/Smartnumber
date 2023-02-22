@@ -17,17 +17,23 @@ namespace SmartMath {
 
     class EvaluationError : public std::exception {
     public:
-        [[nodiscard]] const char *what() const noexcept override;
+        [[nodiscard]] const char *what() const
+
+        noexcept override;
     };
 
     class ConversionError : public std::exception {
     public:
-        [[nodiscard]] const char *what() const noexcept override;
+        [[nodiscard]] const char *what() const
+
+        noexcept override;
     };
 
     class IncorrectInputError : public std::exception {
     public:
-        [[nodiscard]] const char *what() const noexcept override;
+        [[nodiscard]] const char *what() const
+
+        noexcept override;
     };
 
 
@@ -134,10 +140,11 @@ namespace SmartMath {
         enum {
             INTEGER,
             LONG_LONG,
+            BIG_INTEGER,
             DOUBLE
         } tag;
 
-        std::variant<int, long long, double> value;
+        std::variant<int, long long, BigInteger, double> value;
 
     public:
         SmartNumber();
@@ -147,6 +154,8 @@ namespace SmartMath {
         SmartNumber(long long number);
 
         SmartNumber(double number);
+
+        SmartNumber(const BigInteger& number);
 
         SmartNumber(const SmartNumber &other);
 
@@ -235,6 +244,8 @@ namespace SmartMath {
                 case SmartNumber::DOUBLE:
                     out << std::get<double>(number.value);
                     break;
+                case BIG_INTEGER:
+                    out << std::get<BigInteger>(number.value);
             }
             return out;
         }
