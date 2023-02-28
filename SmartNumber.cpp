@@ -437,13 +437,13 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
         case INTEGER: {
             switch (other.tag) {
                 case INTEGER: {
-                    int res = std::get<int>(value) / std::get<int>(other.value);
+                    double res = (double) std::get<int>(value) / (double) std::get<int>(other.value);
                     return {res};
                 }
                 case LONG_LONG: {
                     long long a = std::get<int>(value);
                     long long b = std::get<long long>(other.value);
-                    return {a / b};
+                    return {(double) a / (double) b};
                 }
                 case DOUBLE: {
                     double a = std::get<int>(value);
@@ -451,7 +451,7 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
                     return {a / b};
                 }
                 case BIG_INTEGER: {
-                    return BigInteger(std::get<int>(value)) + std::get<BigInteger>(other.value);
+                    return BigInteger(std::get<int>(value)) / std::get<BigInteger>(other.value);
                 }
             }
         }
@@ -460,18 +460,18 @@ SmartMath::SmartNumber SmartMath::SmartNumber::operator/(const SmartMath::SmartN
                 case LONG_LONG: {
                     long long a = std::get<long long>(value);
                     long long b = std::get<long long>(other.value);
-                    return {a / b};
+                    return {(double) a / (double) b};
                 }
                 case INTEGER: {
                     long long a = std::get<long long>(value);
                     long long b = std::get<int>(other.value);
-                    return {a / b};
+                    return {(double) a / (double) b};
                 }
                 case DOUBLE: {
                     throw ConversionError();
                 }
                 case BIG_INTEGER: {
-                    return BigInteger(std::get<long long>(value)) + std::get<BigInteger>(other.value);
+                    return BigInteger(std::get<long long>(value)) / std::get<BigInteger>(other.value);
                 }
             }
         }
